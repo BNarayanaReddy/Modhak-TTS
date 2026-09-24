@@ -27,6 +27,11 @@ to **[huggingface.co/BNarayanaReddy/modhak-tts-mr-lora](https://huggingface.co/B
 Base vs fine-tuned over the 8 locked buckets, WER via Bodhan `indic-transcribe-core` (per-clip
 language). Reports: `artifacts/eval_reports/{baseline,finetuned}/panel.{json,html}`.
 
+**Audio A/B** — the same held-out texts through each model are in `artifacts/samples/{base_model,finetuned}/`
+(also on the HF repo under `samples/`). The regression is audible on the **Rasa anchor**
+(`retention_rasa_marathi__Chinmay.wav`): base = 65 SNAC frames, fine-tuned = **171** — it rambles ~2.6×
+longer for the same sentence, which is what the anchor WER jump (0.167→0.630) is measuring.
+
 > **Read the numbers with the caveats first.** This pass was run **fast under deadline**: `--limit 6`
 > per bucket and `--max-new-tokens 1000` (vs the configured 2520), WER-only (speaker similarity
 > validated separately, ceiling ~0.6 vs floor ~0.2, but not in this pass). Small n and a low token

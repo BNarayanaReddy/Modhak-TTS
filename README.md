@@ -1,86 +1,74 @@
 # Modhak-TTS — Marathi domain adaptation for Indic-Speak
 
-LoRA fine-tuning pipeline that domain-adapts **bodhan-ai/indic-speak** (a closed-voice
-AR codec-LM TTS model, Llama-3.2-3B backbone + SNAC 24 kHz + fine-tuned Vocos) toward
-Marathi, using the existing named voices (no new voices, no voice cloning, no style).
+A LoRA fine-tuning pipeline that domain-adapts **bodhan-ai/indic-speak** (closed-voice AR codec-LM TTS:
+Llama-3.2-3B + SNAC 24 kHz + fine-tuned Vocos) toward Marathi, using only its existing named voices —
+no new voices, no cloning, no style.
 
 > **Built with Indic-Speak from Bodhan AI / AI4Bharat.**
 
-## Status: complete — trained + evaluated on A100
+## Status: complete — trained, evaluated, released
 
-**67 tests pass; ruff + mypy clean.** The LoRA adapter was trained on the server (loss 4.25→3.15)
-and evaluated base-vs-fine-tuned across the locked buckets. **Honest headline: the fine-tune did not
-improve ASR-WER and regressed the anchor voice — the exact drift Decisions 7/9/D15 pre-registered;
-Hindi retention held.** Full numbers, caveats, and interpretation: **[docs/RESULTS.md](docs/RESULTS.md)**.
+67 tests pass; ruff + mypy clean. The adapter was trained on an A100 (per-token loss 4.25→3.15) and
+evaluated base-vs-fine-tuned with audio A/B samples. Released (public):
+**[huggingface.co/BNarayanaReddy/modhak-tts-mr-lora](https://huggingface.co/BNarayanaReddy/modhak-tts-mr-lora)**.
 
-Setup/repro: **[docs/SETUP.md](docs/SETUP.md)**; judgment log: **[DECISIONS.md](DECISIONS.md)** (D1–18);
-recipe **[docs/TRAIN.md](docs/TRAIN.md)**, eval **[docs/EVAL.md](docs/EVAL.md)**, policy
-**[SAFETY.md](SAFETY.md)**.
+> **Honest headline:** the fine-tune did **not** improve Marathi ASR-WER — it regressed, worst on the
+> studio **anchor voice** (0.167→0.630), which is the *exact* drift the decision log pre-registered
+> (D7/D9/D15); Hindi retention held. This is submitted as an honest domain-adaptation experiment with a
+> negative result, not a quality upgrade — see **[docs/RESULTS.md](docs/RESULTS.md)**.
 
-- **Phase 0 (recon):** ✅ token contract resolved live (`configs/tokens_resolved.yaml`),
-  **SNAC↔Vocos round-trip** (mel-corr 0.973), **reference baseline + determinism** pass.
-  Findings/conflicts in **[docs/RECON.md](docs/RECON.md)**.
-- **Phase 1 (token contract):** ✅ `tokens.py` — frame math + byte-for-byte interleave parity.
-- **Phase 2 (data):** ✅ schema, gates, D15 speaker map, Marathi text-norm, mixture, collator,
-  and **8 locked eval buckets** (`configs/eval_manifests/`, 220 clips held out). Loader
-  validated on the real corpora; SPRINGLab per-speaker quality checked. See
-  **[docs/DATA.md](docs/DATA.md)**.
-- **Phase 3 (model):** ✅ LoRA (Decision 2), freeze policy + verifier — **21.43 M trainable
-  (0.649%)**.
-- **Phase 4 (training):** ✅ SNAC compile, per-codebook weighted loss (D4+D14), replay,
-  regression-stop, determinism, trainer, `scripts/train.py --smoke`. Runs on the **server**
-  (the 11 GB laptop OOMs under bf16+offload). Recipe: **[docs/TRAIN.md](docs/TRAIN.md)**.
-- **Phase 5 (inference):** ✅ `generate.py` (reference semantics + adapter attach/merge),
-  `decode.py` (SNAC/Vocos), `scripts/sample.py` — reference parity tested (de-interleave +
-  prompt byte-for-byte; full e2e gated to the server).
-- **Phase 6 (eval):** ✅ WER (Bodhan `indic-transcribe-core`, ins/del/sub), calibrated speaker
-  similarity, prosody, retention, longform, stock-vs-Vocos A/B, panel → **HTML report**
-  (`scripts/eval.py`). Metric core unit-tested. See **[docs/EVAL.md](docs/EVAL.md)**.
+## How to read this repo
 
-**Done:** full `train.py` on the A100 (adapter in `artifacts/checkpoints/main_run/`, weights gitignored)
-→ `eval.py` base-vs-fine-tuned → reports in `artifacts/eval_reports/{baseline,finetuned}/panel.{json,html}`
-→ results written up in **[docs/RESULTS.md](docs/RESULTS.md)**. The laptop handles inference/sampling;
-training + the ASR-download eval ran on the server.
+Suggested order for a reviewer:
 
-## Layout
+1. **[docs/RESULTS.md](docs/RESULTS.md)** — what happened: the base-vs-fine-tuned table, the audible
+   anchor drift, and the caveats.
+2. **[DECISIONS.md](DECISIONS.md)** — the judgment log (D1–D18): every choice, its alternatives, why,
+   and the runtime conflicts found and reported (this is the heart of the deliverable).
+3. **[docs/OVERVIEW.md](docs/OVERVIEW.md)** — how the code is structured, phase by phase, with a module map.
+4. **[docs/SETUP.md](docs/SETUP.md)** — run it yourself: env → weights → train → eval → sample.
+
+## Repo map
 
 ```text
-reference/      authoritative, do-not-edit: inference.py, token_contract.md, voices.md
-configs/        tokens_resolved.yaml (P0); hydra configs added per phase
-docs/           RECON.md (P0); DATA/TRAIN/EVAL added per phase
-src/indic_speak_ft/   pipeline package (built per phase)
-tests/          pytest (smoke tests < 2 min CPU)
-scripts/        prepare_data / train / eval / sample entry points
-artifacts/      gitignored except artifacts/recon/ (P0 audio evidence)
+src/indic_speak_ft/   the pipeline package (tokens, data, model, train, inference, eval)
+scripts/              entry points: recon_parity · validate_loader · build_eval_buckets · train · sample · eval
+configs/              base/data/lora/train/eval yaml + eval_manifests/ (8 locked eval buckets)
+reference/            authoritative, DO-NOT-EDIT: inference.py, token_contract.md, voices.md
+docs/                 OVERVIEW · RESULTS · SETUP · DATA · TRAIN · EVAL · RECON
+tests/                pytest (hermetic, < 2 min on CPU)
+artifacts/            checkpoints/ (adapter) · eval_reports/ (panels) · samples/ (A/B wavs) · recon/
+DECISIONS.md          the judgment log · SAFETY.md  the use/license policy
 ```
 
-## Environment
+Per-phase detail and the full module table are in **[docs/OVERVIEW.md](docs/OVERVIEW.md)**.
 
-- Inference on this laptop (RTX 3050 6 GB). Training on a separate server.
-- Model weights + codec live on the external offload drive, never in git.
-- Requires a venv pinned to `transformers==5.14.1` (the model's save version) and
-  `datasets>=3` — see RECON §1 (E1–E3). `pip install -e .` then `pip install -e .[dev]`.
+## Quickstart
 
-## Reproduce (once Phase 1+ lands)
+Full runbook (env, weights, gated ASR, server notes) is **[docs/SETUP.md](docs/SETUP.md)**. In short:
 
 ```bash
-scripts/train.py --smoke     # 100 steps / 20 samples, proves the pipeline
-scripts/train.py             # main run (server)
-scripts/eval.py              # metric vector + HTML report
-scripts/sample.py            # synthesize sample wavs
+pip install -e ".[dev]"           # + ".[eval]" and torchaudio (matching CUDA) for the eval
+python -m pytest -q               # 67 hermetic tests
+python scripts/train.py           # LoRA run (server, full_gpu) -> artifacts/checkpoints/main_run/
+python scripts/eval.py --label finetuned --adapter artifacts/checkpoints/main_run --with-speaker
+python scripts/sample.py --text "…" --speaker Anagha --adapter artifacts/checkpoints/main_run
 ```
 
-## License / attribution
+## Docs
 
-Indic-Speak is under the Bodhan AI / Indic Open Model License (see `reference/` and,
-when written, `SAFETY.md`). Attribution string above is required. Closed voice library
-only; no unauthorized impersonation or misleading content.
+| doc | contents |
+|---|---|
+| [docs/RESULTS.md](docs/RESULTS.md) | training + eval outcome, base-vs-fine-tuned table, audio A/B, caveats |
+| [DECISIONS.md](DECISIONS.md) | judgment log D1–D18 (choices, alternatives, conflicts) |
+| [docs/OVERVIEW.md](docs/OVERVIEW.md) | phase-by-phase build + module map |
+| [docs/SETUP.md](docs/SETUP.md) | from-scratch runbook (laptop + server) |
+| [docs/DATA.md](docs/DATA.md) · [docs/TRAIN.md](docs/TRAIN.md) · [docs/EVAL.md](docs/EVAL.md) | data pipeline · training recipe · eval methodology |
+| [docs/RECON.md](docs/RECON.md) | Phase-0 findings + runtime conflicts |
+| [SAFETY.md](SAFETY.md) | speaker-use policy, license, attribution |
 
-```bibtex
-@misc{indicspeak2026,
-  title  = {Indic-Speak: Text-to-Speech for 22 Indian Languages and English},
-  author = {Bodhan AI and AI4Bharat},
-  year   = {2026},
-  url    = {https://huggingface.co/bodhan-ai/indic-speak}
-}
-```
+## License & attribution
+
+Derivative of `bodhan-ai/indic-speak` under the **Bodhan AI / Indic Open Model License**; distributed
+under the same terms, with the required attribution above. Closed voice library only — no impersonation
+or misleading content. Full policy + dataset licenses: **[SAFETY.md](SAFETY.md)**.

@@ -1,0 +1,42 @@
+[
+  {
+    "file": "retention_rasa_marathi__Chinmay.wav",
+    "bucket": "retention_rasa_marathi",
+    "speaker": "Chinmay",
+    "language": "mr",
+    "text": "तुम्ही मॉड्यूलर किचनसाठी दाखवलेला उत्स्फूर्त कल खूपच चकित करणारा आहे.",
+    "frames": 65
+  },
+  {
+    "file": "marathi_general_unseen_domain__Anagha.wav",
+    "bucket": "marathi_general_unseen_domain",
+    "speaker": "Anagha",
+    "language": "mr",
+    "text": "गौतमांनी त्याला दुरून पाहिल्यावर त्यांना सर्व प्रकार कळून आला.",
+    "frames": 59
+  },
+  {
+    "file": "marathi_adversarial__Chinmay.wav",
+    "bucket": "marathi_adversarial",
+    "speaker": "Chinmay",
+    "language": "mr",
+    "text": "वैजयंतिमाला",
+    "frames": 20
+  },
+  {
+    "file": "retention_hindi__Amit.wav",
+    "bucket": "retention_hindi",
+    "speaker": "Amit",
+    "language": "hi",
+    "text": "गहरा आत्मानुशासन, उनका बीजकोष है",
+    "frames": 44
+  },
+  {
+    "file": "retention_english__Amit.wav",
+    "bucket": "retention_english",
+    "speaker": "Amit",
+    "language": "en",
+    "text": "although much later on.",
+    "frames": 42
+  }
+]

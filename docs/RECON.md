@@ -9,12 +9,12 @@ recorded snapshot.
 
 | Phase-0 step | Result |
 |---|---|
-| 1. Scaffold repo, pin deps | ✅ done (this repo; `pyproject.toml`) |
-| 2. Load tokenizer | ✅ (via raw `tokenizer.json`; see env note E1) |
-| 3. Resolve every dependent token ID | ✅ all resolve; map in `configs/tokens_resolved.yaml` |
-| 4. Assert SNAC token space | ⚠️ **conflict A** — GOAL.md assertion is wrong as written; real contract holds |
-| 5. SNAC↔Vocos round-trip | ✅ **PASS** (mel-corr 0.973, time-aligned) |
-| 6. Reference baseline + determinism | ✅ **PASS** — LM loads, deterministic, documented example stops cleanly |
+| 1. Scaffold repo, pin deps | done (this repo; `pyproject.toml`) |
+| 2. Load tokenizer | (via raw `tokenizer.json`; see env note E1) |
+| 3. Resolve every dependent token ID | all resolve; map in `configs/tokens_resolved.yaml` |
+| 4. Assert SNAC token space | **conflict A** — GOAL.md assertion is wrong as written; real contract holds |
+| 5. SNAC↔Vocos round-trip | **PASS** (mel-corr 0.973, time-aligned) |
+| 6. Reference baseline + determinism | **PASS** — LM loads, deterministic, documented example stops cleanly |
 
 **Phase 0 is complete.** The round-trip (the check GOAL.md flags as load-bearing for
 everything downstream) and the reference baseline both pass; the token contract is

@@ -29,6 +29,9 @@ vocos/best.pt
 # scratch audio
 *.wav
 !artifacts/recon/*.wav
+# keep the base-vs-finetuned A/B sample wavs in-repo (deliverable audio)
+!artifacts/samples/
+!artifacts/samples/**
 
 # os
 .DS_Store

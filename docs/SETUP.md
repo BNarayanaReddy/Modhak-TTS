@@ -129,13 +129,13 @@ Expected: `end_of_speech emitted=True`, `unique-c0 frac=1.00`, a ~1 s wav in
 
 | Phase | Command | Status |
 |---|---|---|
-| 1 — token contract | `python -m pytest tests/test_tokens.py -q` | ✅ done |
-| 2 — data pipeline | `python scripts/validate_loader.py` · `python scripts/build_eval_buckets.py` | ✅ done (buckets locked) |
-| 3 — model/LoRA/freeze | `python -m pytest tests/test_freeze_policy.py -q` | ✅ done |
-| 4 — train (smoke) | `python scripts/train.py --smoke` | ✅ ran on server |
-| 4 — train (full) | `python scripts/train.py`  (set `full_gpu: true`) | ✅ **ran** → `artifacts/checkpoints/main_run/` |
-| 5 — inference | `python scripts/sample.py --text "…" --speaker Anagha [--adapter <dir>]` | ✅ done |
-| 6 — eval | `python scripts/eval.py --label finetuned --adapter <dir>` | ✅ **ran** → `artifacts/eval_reports/`; see [RESULTS.md](RESULTS.md) |
+| 1 — token contract | `python -m pytest tests/test_tokens.py -q` | done |
+| 2 — data pipeline | `python scripts/validate_loader.py` · `python scripts/build_eval_buckets.py` | done (buckets locked) |
+| 3 — model/LoRA/freeze | `python -m pytest tests/test_freeze_policy.py -q` | done |
+| 4 — train (smoke) | `python scripts/train.py --smoke` | ran on server |
+| 4 — train (full) | `python scripts/train.py`  (set `full_gpu: true`) | **ran** → `artifacts/checkpoints/main_run/` |
+| 5 — inference | `python scripts/sample.py --text "…" --speaker Anagha [--adapter <dir>]` | done |
+| 6 — eval | `python scripts/eval.py --label finetuned --adapter <dir>` | **ran** → `artifacts/eval_reports/`; see [RESULTS.md](RESULTS.md) |
 
 Run the whole hermetic suite with `python -m pytest -q` (67 tests; set
 `INDIC_SPEAK_TOKENIZER_JSON` and `SNAC_DIR` to also run the real-asset tests).
