@@ -1,0 +1,18 @@
+{
+  "seed": 1234,
+  "buckets": {
+    "marathi_adversarial": 40,
+    "marathi_code_switch": 0,
+    "marathi_stem_seen_voice": 40,
+    "retention_rasa_marathi": 60,
+    "marathi_general_unseen_domain": 40,
+    "retention_hindi": 40,
+    "retention_english": 30,
+    "marathi_longform": 12
+  },
+  "held_out_clip_keys": 250,
+  "relock_d17": {
+    "added_anagha": 30,
+    "shard": "test-00006-of-00007.parquet"
+  }
+}

@@ -1,0 +1,3 @@
+steps=3000 draws=12000 unique_clips=2500 final_loss=13.2940 seconds=6201
+trainable_params=21430272
+pools=springlab_marathi:1400 rasa_marathi:600 hindi_replay:375 english_replay:125

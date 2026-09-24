@@ -1,0 +1,109 @@
+<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Indic-Speak MR FT — finetuned</title><style>
+:root{--bg:#fff;--fg:#1a1a1a;--muted:#666;--line:#e2e2e2;--head:#f5f5f5;--accent:#0b6}
+@media(prefers-color-scheme:dark){:root{--bg:#151515;--fg:#eaeaea;--muted:#9a9a9a;--line:#333;--head:#1f1f1f;--accent:#3db88a}}
+body{background:var(--bg);color:var(--fg);font:14px/1.5 system-ui,sans-serif;margin:0;padding:24px}
+h1{font-size:20px;margin:0 0 4px}.sub{color:var(--muted);margin:0 0 20px}
+table{border-collapse:collapse;width:100%;margin:8px 0 24px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:right}
+th:first-child,td:first-child{text-align:left}th{background:var(--head)}
+td.good{color:var(--accent)}caption{text-align:left;font-weight:600;margin:16px 0 6px;font-size:15px}
+.ci{color:var(--muted);font-size:12px}
+</style></head><body><h1>Indic-Speak MR FT — finetuned</h1><p class='sub'>adapter=artifacts/checkpoints/main_run</p><caption>WER buckets (95% bootstrap CI over utterances)</caption><table><tr><th>bucket</th><th>n</th><th>WER</th><th>ins</th><th>del</th><th>sub</th><th>max-hit</th><th>spk-sim</th></tr><tr><td>marathi_adversarial</td><td>6</td><td>0.353 <span class='ci'>[0.111, 1.194]</span></td><td>2</td><td>0</td><td>4</td><td>0.00</td><td>—</td></tr><tr><td>marathi_general_unseen_domain</td><td>6</td><td>0.343 <span class='ci'>[0.161, 0.719]</span></td><td>11</td><td>0</td><td>12</td><td>0.17</td><td>—</td></tr><tr><td>marathi_stem_seen_voice</td><td>6</td><td>0.262 <span class='ci'>[0.156, 0.350]</span></td><td>2</td><td>6</td><td>14</td><td>0.17</td><td>—</td></tr><tr><td>retention_english</td><td>6</td><td>0.524 <span class='ci'>[0.346, 0.714]</span></td><td>0</td><td>0</td><td>22</td><td>0.00</td><td>—</td></tr><tr><td>retention_hindi</td><td>6</td><td>0.281 <span class='ci'>[0.211, 0.381]</span></td><td>1</td><td>1</td><td>25</td><td>0.00</td><td>—</td></tr><tr><td>retention_rasa_marathi</td><td>6</td><td>0.630 <span class='ci'>[0.195, 1.732]</span></td><td>24</td><td>1</td><td>9</td><td>0.33</td><td>—</td></tr></table><caption>Longform (30–60 s)</caption><table><tr><th>n</th><th>rep 3-gram</th><th>rep 5-gram</th><th>max-hit rate</th><th>mean frames</th></tr><tr><td>6</td><td>0.001</td><td>0.001</td><td>1.00</td><td>142.0</td></tr></table><details><summary>raw JSON</summary><pre>{
+  &quot;buckets&quot;: {
+    &quot;marathi_adversarial&quot;: {
+      &quot;n&quot;: 6,
+      &quot;wer&quot;: 0.35294117647058826,
+      &quot;wer_ci95&quot;: [
+        0.1111111111111111,
+        1.1944444444444444
+      ],
+      &quot;hit_max_new_tokens_rate&quot;: 0.0,
+      &quot;insertions&quot;: 2,
+      &quot;deletions&quot;: 0,
+      &quot;substitutions&quot;: 4,
+      &quot;hits&quot;: 13,
+      &quot;ref_words&quot;: 17
+    },
+    &quot;marathi_code_switch&quot;: {
+      &quot;n&quot;: 0,
+      &quot;note&quot;: &quot;empty bucket&quot;
+    },
+    &quot;marathi_general_unseen_domain&quot;: {
+      &quot;n&quot;: 6,
+      &quot;wer&quot;: 0.34328358208955223,
+      &quot;wer_ci95&quot;: [
+        0.1609959241538189,
+        0.7189083820662767
+      ],
+      &quot;hit_max_new_tokens_rate&quot;: 0.16666666666666666,
+      &quot;insertions&quot;: 11,
+      &quot;deletions&quot;: 0,
+      &quot;substitutions&quot;: 12,
+      &quot;hits&quot;: 55,
+      &quot;ref_words&quot;: 67
+    },
+    &quot;marathi_longform&quot;: {
+      &quot;n&quot;: 6,
+      &quot;repetition_rate_3gram&quot;: 0.0008350033400133516,
+      &quot;repetition_rate_5gram&quot;: 0.0005020080321285203,
+      &quot;hit_max_new_tokens_rate&quot;: 1.0,
+      &quot;mean_frames&quot;: 142.0
+    },
+    &quot;marathi_stem_seen_voice&quot;: {
+      &quot;n&quot;: 6,
+      &quot;wer&quot;: 0.2619047619047619,
+      &quot;wer_ci95&quot;: [
+        0.15634003074220468,
+        0.3496267018006149
+      ],
+      &quot;hit_max_new_tokens_rate&quot;: 0.16666666666666666,
+      &quot;insertions&quot;: 2,
+      &quot;deletions&quot;: 6,
+      &quot;substitutions&quot;: 14,
+      &quot;hits&quot;: 64,
+      &quot;ref_words&quot;: 84
+    },
+    &quot;retention_english&quot;: {
+      &quot;n&quot;: 6,
+      &quot;wer&quot;: 0.5238095238095238,
+      &quot;wer_ci95&quot;: [
+        0.3460119047619047,
+        0.7142857142857143
+      ],
+      &quot;hit_max_new_tokens_rate&quot;: 0.0,
+      &quot;insertions&quot;: 0,
+      &quot;deletions&quot;: 0,
+      &quot;substitutions&quot;: 22,
+      &quot;hits&quot;: 20,
+      &quot;ref_words&quot;: 42
+    },
+    &quot;retention_hindi&quot;: {
+      &quot;n&quot;: 6,
+      &quot;wer&quot;: 0.28125,
+      &quot;wer_ci95&quot;: [
+        0.21071428571428572,
+        0.3812875939849624
+      ],
+      &quot;hit_max_new_tokens_rate&quot;: 0.0,
+      &quot;insertions&quot;: 1,
+      &quot;deletions&quot;: 1,
+      &quot;substitutions&quot;: 25,
+      &quot;hits&quot;: 70,
+      &quot;ref_words&quot;: 96
+    },
+    &quot;retention_rasa_marathi&quot;: {
+      &quot;n&quot;: 6,
+      &quot;wer&quot;: 0.6296296296296297,
+      &quot;wer_ci95&quot;: [
+        0.19521780303030306,
+        1.731960227272727
+      ],
+      &quot;hit_max_new_tokens_rate&quot;: 0.3333333333333333,
+      &quot;insertions&quot;: 24,
+      &quot;deletions&quot;: 1,
+      &quot;substitutions&quot;: 9,
+      &quot;hits&quot;: 44,
+      &quot;ref_words&quot;: 54
+    }
+  }
+}</pre></details></body></html>

@@ -1,0 +1,137 @@
+base:
+  offload: /root/models
+  model_dir: /root/models/indic-speak
+  snac_dir: /root/models/snac_24khz
+  device: cuda
+  full_gpu: true
+  gpu_mem: 40GiB
+train:
+  seed: 3407
+  deterministic: true
+  output_dir: artifacts/checkpoints/main_run
+  learning_rate: 0.0001
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 4
+  warmup_steps: 20
+  max_steps: 3000
+  logging_steps: 10
+  save_steps: 500
+  gradient_checkpointing: true
+  bf16: true
+  loss:
+    enable_position_weighting: true
+    position_weights:
+    - 1.0
+    - 0.7
+    - 0.4
+    - 0.4
+    - 0.7
+    - 0.4
+    - 0.4
+    stop_weight: 1.0
+    include_stop_in_loss: true
+  retention:
+    every_steps: 500
+    max_relative_regression: 0.15
+  full:
+    clips:
+      springlab_marathi: 1400
+      rasa_marathi: 600
+      hindi_replay: 375
+      english_replay: 125
+    max_seq_len: 2048
+    mixture_window: 20
+  smoke:
+    max_steps: 100
+    n_samples: 20
+    per_device_train_batch_size: 1
+    gradient_accumulation_steps: 1
+    save_steps: 50
+    output_dir: artifacts/checkpoints/smoke_run
+data:
+  sources:
+    primary_marathi:
+      hf_path: SPRINGLab/IndicTTS_Marathi
+      role: primary_training
+      language_id: mr
+      format: parquet
+      gated: false
+    voice_anchor:
+      hf_path: ai4bharat/Rasa
+      split: Marathi
+      role: voice_anchor
+      language_id: mr
+      format: parquet
+      gated: true
+    replay_hindi:
+      hf_path: SPRINGLab/IndicTTS-Hindi
+      role: replay
+      language_id: hi
+      format: parquet
+      gated: false
+    replay_english:
+      hf_path: SPRINGLab/IndicTTS-English
+      role: replay
+      language_id: en
+      format: parquet
+      gated: false
+  audio:
+    target_sample_rate: 24000
+    source_sample_rate_hint: 48000
+  speaker_assignment:
+    SPRINGLab/IndicTTS_Marathi:
+      by: gender_int
+      map:
+        0: Anagha
+        1: Chinmay
+    ai4bharat/Rasa:
+      by: gender_str
+      map:
+        Female: Anagha
+        Male: Chinmay
+    SPRINGLab/IndicTTS-Hindi:
+      by: gender_int
+      map:
+        0: Kavya
+        1: Amit
+    SPRINGLab/IndicTTS-English:
+      by: fixed
+      voice: Amit
+  mixture:
+    springlab_marathi: 0.56
+    rasa_marathi: 0.24
+    hindi_replay: 0.15
+    english_replay: 0.05
+  gates:
+    hard:
+      require_known_license: true
+      duration_s:
+      - 0.5
+      - 20.0
+      require_nonempty_normalized: true
+      require_speaker_in_library: true
+      reject_eval_bucket_audio_hash: true
+    soft:
+      snr_floor_db: 15.0
+      clipping_ratio_max: 0.01
+  dead_mans_switch:
+    sample_clips_per_source: 64
+    min_median_snr_db: 20.0
+    min_wideband_fraction: 0.9
+    wideband_floor_hz: 6000.0
+  text_norm:
+    normalizer_version: mr-norm-v1
+    expand_numbers: false
+lora:
+  r: 32
+  alpha: 64
+  dropout: 0.05
+  attention_targets:
+  - q_proj
+  - v_proj
+  mlp_targets:
+  - up_proj
+  - gate_proj
+  mlp_layer_range:
+  - 8
+  - 24

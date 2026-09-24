@@ -1,0 +1,10 @@
+# configs/lora.yaml — LoRA configuration (Decision 2). Rationale in DECISIONS.md D2 and
+# src/indic_speak_ft/model/lora.py. The base model has 28 layers (indices 0..27).
+r: 32
+alpha: 64
+dropout: 0.05
+attention_targets: [q_proj, v_proj]   # adapted on ALL layers
+mlp_targets: [up_proj, gate_proj]      # adapted on the MIDDLE layers only
+mlp_layer_range: [8, 24]               # inclusive
+# Frozen (enforced by model/freeze.py): embed_tokens, lm_head (tied), down_proj, all norms,
+# all base weights, SNAC codec, Vocos vocoder.

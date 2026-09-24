@@ -1,0 +1,58 @@
+# configs/tokens_resolved.yaml
+#
+# Resolved token-ID contract for bodhan-ai/indic-speak, read directly from the
+# tokenizer at recon time (Phase 0). NOT hand-transcribed. This file is a
+# recorded snapshot for review/auditing; runtime code in src/indic_speak_ft/tokens.py
+# must ALWAYS re-resolve these from the live tokenizer (never import hardcoded
+# values from here) — the same discipline the reference inference.py and
+# bodhan_genai use. See docs/RECON.md for how these were verified.
+#
+# Source repo:            bodhan-ai/indic-speak
+# Tokenizer saved with:   transformers 5.14.1  (tokenizer_class: TokenizersBackend)
+# Base model:             Llama-3.2-3B  (LlamaForCausalLM, 28 layers, hidden 3072)
+# Vocab size:             156960
+# tie_word_embeddings:    true   # lm_head shares storage with embed_tokens
+# Resolved on:            2026-09-24
+
+structural:
+  begin_of_text: 128000        # == tokenizer.bos_token_id
+  end_of_text:   128001        # == tokenizer.eos_token_id (config eos_token_id)
+  eot_id:        128009
+  pad:           128263        # <|pad|>  (tokenizer pad_token)
+  start_of_human: 128259
+  end_of_human:   128260
+  start_of_ai:    128261
+  end_of_ai:      128262       # closes the model turn; see RECON conflict D / Phase-2 flag
+  start_of_speech: 128257      # model emits this as first generated token in the training template
+  end_of_speech:   128258      # generation stop token
+
+conditioning:
+  speaker_open:  156938        # <|speaker>
+  speaker_close: 156939        # <speaker|>
+  style_open:    156940        # <|style>
+  style_close:   156941        # <style|>   (NOTE: GOAL.md step-3 listed "<|/style>" which does NOT exist)
+  env_open:      156942        # <|env>     (not used in this project)
+  env_close:     156943        # <env|>
+
+# SNAC audio band ------------------------------------------------------------
+# CONTRACT CORRECTION (see RECON conflict A): the audio tokens are named
+# PER-CODE, not per-codebook. <|snac_N|> == base + N for N in 0..28671.
+# GOAL.md step-4 asserted "<|snac_k|> == base + k*4096 for k in 0..6", which is
+# FALSE for this tokenizer (<|snac_1|> == 128267, not 132362). The real,
+# reference-honored contract is: single base token <|snac_0|>, contiguous band,
+# and per-FRAME-POSITION arithmetic offsets base + position*4096 (position 0..6).
+snac:
+  base_token: "<|snac_0|>"
+  base_id: 128266
+  num_codebooks_per_frame: 7
+  codebook_size: 4096
+  total_audio_tokens: 28672
+  band_lo: 128266
+  band_hi_inclusive: 156937    # == <|snac_28671|>, sits exactly below <|speaker> (156938)
+  naming_scheme: "per-code: <|snac_N|> == base + N for N in 0..28671"
+  # offset applied to a raw code (0..4095) by its position within the 7-token frame:
+  frame_position_bases: [128266, 132362, 136458, 140554, 144650, 148746, 152842]
+  # frame i -> [c0[i], c1[2i], c2[4i], c2[4i+1], c1[2i+1], c2[4i+2], c2[4i+3]]
+  interleave_pattern: ["c0[i]", "c1[2i]", "c2[4i]", "c2[4i+1]", "c1[2i+1]", "c2[4i+2]", "c2[4i+3]"]
+  # consecutive frames sharing the same c0 are removed at ENCODE time
+  dedup_consecutive_frames: true

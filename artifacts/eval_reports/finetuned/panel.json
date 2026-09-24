@@ -1,0 +1,99 @@
+{
+  "buckets": {
+    "marathi_adversarial": {
+      "n": 6,
+      "wer": 0.35294117647058826,
+      "wer_ci95": [
+        0.1111111111111111,
+        1.1944444444444444
+      ],
+      "hit_max_new_tokens_rate": 0.0,
+      "insertions": 2,
+      "deletions": 0,
+      "substitutions": 4,
+      "hits": 13,
+      "ref_words": 17
+    },
+    "marathi_code_switch": {
+      "n": 0,
+      "note": "empty bucket"
+    },
+    "marathi_general_unseen_domain": {
+      "n": 6,
+      "wer": 0.34328358208955223,
+      "wer_ci95": [
+        0.1609959241538189,
+        0.7189083820662767
+      ],
+      "hit_max_new_tokens_rate": 0.16666666666666666,
+      "insertions": 11,
+      "deletions": 0,
+      "substitutions": 12,
+      "hits": 55,
+      "ref_words": 67
+    },
+    "marathi_longform": {
+      "n": 6,
+      "repetition_rate_3gram": 0.0008350033400133516,
+      "repetition_rate_5gram": 0.0005020080321285203,
+      "hit_max_new_tokens_rate": 1.0,
+      "mean_frames": 142.0
+    },
+    "marathi_stem_seen_voice": {
+      "n": 6,
+      "wer": 0.2619047619047619,
+      "wer_ci95": [
+        0.15634003074220468,
+        0.3496267018006149
+      ],
+      "hit_max_new_tokens_rate": 0.16666666666666666,
+      "insertions": 2,
+      "deletions": 6,
+      "substitutions": 14,
+      "hits": 64,
+      "ref_words": 84
+    },
+    "retention_english": {
+      "n": 6,
+      "wer": 0.5238095238095238,
+      "wer_ci95": [
+        0.3460119047619047,
+        0.7142857142857143
+      ],
+      "hit_max_new_tokens_rate": 0.0,
+      "insertions": 0,
+      "deletions": 0,
+      "substitutions": 22,
+      "hits": 20,
+      "ref_words": 42
+    },
+    "retention_hindi": {
+      "n": 6,
+      "wer": 0.28125,
+      "wer_ci95": [
+        0.21071428571428572,
+        0.3812875939849624
+      ],
+      "hit_max_new_tokens_rate": 0.0,
+      "insertions": 1,
+      "deletions": 1,
+      "substitutions": 25,
+      "hits": 70,
+      "ref_words": 96
+    },
+    "retention_rasa_marathi": {
+      "n": 6,
+      "wer": 0.6296296296296297,
+      "wer_ci95": [
+        0.19521780303030306,
+        1.731960227272727
+      ],
+      "hit_max_new_tokens_rate": 0.3333333333333333,
+      "insertions": 24,
+      "deletions": 1,
+      "substitutions": 9,
+      "hits": 44,
+      "ref_words": 54
+    }
+  }
+}

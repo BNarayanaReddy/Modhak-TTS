@@ -1,0 +1,12 @@
+# configs/base.yaml — machine paths + model placement (override per box; see docs/SETUP.md).
+offload: /media/narayana/Windows-SSD/ai-models/bodhan_offload
+model_dir: ${offload}/models/indic-speak
+snac_dir: ${offload}/models/snac_24khz
+device: cuda
+
+# Model placement.
+#   full_gpu: false → device_map="auto" with the GPU capped at gpu_mem, rest offloaded to CPU
+#     (the 6 GB laptop; training is RAM-heavy here — prefer the server or QLoRA).
+#   full_gpu: true  → load entirely on one GPU (the training server). SET THIS ON THE SERVER.
+full_gpu: false
+gpu_mem: 5GiB           # laptop GPU cap for the offload split; ignored when full_gpu: true

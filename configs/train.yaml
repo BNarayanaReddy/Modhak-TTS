@@ -1,0 +1,53 @@
+# configs/train.yaml — training recipe (see docs/TRAIN.md for the reasoning).
+seed: 3407
+deterministic: true
+output_dir: artifacts/checkpoints/main_run
+
+learning_rate: 1.0e-4
+per_device_train_batch_size: 1
+gradient_accumulation_steps: 4
+warmup_steps: 20
+max_steps: 3000
+logging_steps: 10
+save_steps: 500
+gradient_checkpointing: true
+bf16: true
+
+loss:
+  enable_position_weighting: true            # Decision 4 (confirmed) — codebook-0 priority
+  position_weights: [1.0, 0.7, 0.4, 0.4, 0.7, 0.4, 0.4]   # by FRAME position (c0,c1,c2,c2,c1,c2,c2)
+  stop_weight: 1.0                           # D14 — learn to stop
+  include_stop_in_loss: true                 # D14
+
+retention:
+  every_steps: 500
+  max_relative_regression: 0.15              # Decision 3 rollback threshold
+
+# Full-run data plan (server). SCALE lives here (coding standard: no magic numbers in code);
+# the shard LAYOUT is scripts/train.py FULL_PLAN (mirrors the eval-bucket build, so speaker
+# mapping is identical and held-out eval clips are excluded by key). `clips` = unique compiled
+# clips per mixture pool; pools are drawn per configs/data.yaml `mixture` with a fixed per-batch
+# composition. Sizes ≈ proportional to the mixture, so each source sees ~the same #epochs over
+# max_steps (3000 steps × eff-batch 4 = 12000 draws ⇒ ~4.8 epochs/pool).
+full:
+  clips:
+    springlab_marathi: 1400    # 0.56 — SPRINGLab general MR (Anagha shard 0 + Chinmay shard 3)
+    rasa_marathi:      600     # 0.24 — Rasa MR anchor (test shards 2–4; eval used 0–1)
+    hindi_replay:      375     # 0.15 — Hindi anti-forgetting (linguistically closest)
+    english_replay:    125     # 0.05 — English backbone health
+  max_seq_len: 2048            # drop clips whose flattened sequence exceeds this (A100 headroom)
+  # Mixture window for the per-batch composition guarantee (replay.py). MUST be large enough to
+  # seat every source ≥1 under largest-remainder rounding — at the effective batch (4) English
+  # (5%) rounds to 0 and never trains. 20 is the smallest window that seats all four
+  # ({springlab 11, rasa 5, hindi 3, english 1} = 55/25/15/5, exactly 20% non-Marathi replay per
+  # Decision 3); the trainer walks it in effective-batch groups, so English recurs every 20 draws.
+  mixture_window: 20
+
+# --smoke overrides: prove the pipeline end-to-end before committing compute.
+smoke:
+  max_steps: 100
+  n_samples: 20
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 1
+  save_steps: 50
+  output_dir: artifacts/checkpoints/smoke_run

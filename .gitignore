@@ -1,0 +1,34 @@
+# envs / caches
+.venv/
+__pycache__/
+*.py[cod]
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+*.egg-info/
+
+# artifacts (checkpoints, reports, samples) — kept out of git; see Modhak-TTS-artifacts/
+artifacts/**
+!artifacts/recon/
+!artifacts/recon/**
+# ...but keep the small deliverable EVIDENCE in-repo (weights stay ignored by *.safetensors below):
+!artifacts/eval_reports/
+!artifacts/eval_reports/**
+!artifacts/checkpoints/
+!artifacts/checkpoints/main_run/
+!artifacts/checkpoints/main_run/config_snapshot.yaml
+!artifacts/checkpoints/main_run/training_log.txt
+!artifacts/checkpoints/main_run/adapter_config.json
+
+# model weights / offload (live on the external drive, never in git)
+*.safetensors
+*.bin
+*.pt
+vocos/best.pt
+
+# scratch audio
+*.wav
+!artifacts/recon/*.wav
+
+# os
+.DS_Store

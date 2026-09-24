@@ -1,0 +1,83 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "indic-speak-ft"
+version = "0.0.1"
+description = "Marathi domain-adaptation LoRA fine-tuning pipeline for bodhan-ai/indic-speak (Modhak-TTS)"
+requires-python = ">=3.10"
+readme = "README.md"
+
+# Dependency pins. Versions marked (verified P0) were exercised during Phase-0
+# recon on this machine. Versions marked (P2/P3/P6) are finalized in their phase
+# but pinned here so the environment is reproducible. See docs/RECON.md §1 (E1–E3)
+# for the two environment constraints that drive these pins:
+#   - transformers MUST be >=5 (the model/tokenizer were saved with 5.14.1;
+#     transformers 4.x cannot load the TokenizersBackend tokenizer).
+#   - datasets must be >=3 (2.14.x is incompatible with the installed pyarrow).
+dependencies = [
+  # --- core model / codec (verified P0) ---
+  "torch>=2.4",                 # this host: 2.13.0+cu130, CUDA 13.0. Install the CUDA
+                                # wheel matching the target box; do not pin the +cuXXX
+                                # local tag here (hardware-specific).
+  "transformers==5.14.1",       # MUST match the model's save version (E1)
+  "snac==1.2.1",                # SNAC 24 kHz codec (verified P0 round-trip)
+  "huggingface-hub>=0.23",
+  "safetensors>=0.4",
+  # --- LoRA / training (P3/P4) ---
+  "peft>=0.14",
+  "accelerate>=1.0",            # device_map + CPU offload for 6 GB-VRAM inference
+  # --- audio io (verified P0) ---
+  "soundfile==0.14.0",
+  "librosa==0.11.0",
+  "joblib>=1.3",                # librosa runtime dep (was missing on host, E3)
+  "numpy>=1.26",
+  "scipy>=1.11",
+  # --- config / schema (verified P0) ---
+  "hydra-core==1.3.2",
+  "omegaconf>=2.3",
+  "pydantic==2.13.4",
+  "pyyaml>=6",
+  # --- data pipeline (P2) ---
+  "datasets>=3.0",              # 2.14.x breaks on installed pyarrow (E2)
+  "indic-nlp-library==0.92",    # numeric expansion fallback
+  # indic_normalizer (Bodhan) is a git dep with a Marathi + LaTeX/chemistry engine;
+  # installed in Phase 2:  pip install git+https://github.com/Bodhan-AI/indic_normalizer.git
+]
+
+[project.optional-dependencies]
+eval = [
+  "jiwer>=3.0",                 # WER (P6)
+  # WER ASR = bodhan-ai/indic-transcribe-core (gated; fetched at runtime via snapshot_download +
+  # trust_remote_code, not a pip dep). Its runtime deps below; install torchaudio from the SAME
+  # CUDA index-url as torch (e.g. --index-url .../whl/cu124), not plain PyPI.
+  "torchaudio>=2.1",            # indic-transcribe-core resampling (sinc_interp_hann)
+  "sentencepiece>=0.1.99",      # indic-transcribe-core tokenizer (path-based)
+  # speaker-similarity embedder (ECAPA):
+  "speechbrain>=1.1",
+  "hyperpyyaml>=1.2",           # speechbrain config loader
+  "ruamel.yaml>=0.17,<0.19",    # hyperpyyaml Loader breaks on ruamel 0.19+ (use 0.18.x)
+]
+dev = [
+  "pytest>=8",
+  "ruff>=0.6",
+  "mypy>=1.11",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.mypy]
+python_version = "3.10"
+plugins = ["pydantic.mypy"]
+ignore_missing_imports = true

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "marathi_adversarial_000",
+    "reference": "वैजयंतिमाला",
+    "hypothesis": "वैजयंती माळा"
+  },
+  {
+    "id": "marathi_adversarial_001",
+    "reference": "साकेत एक्स्प्रेस",
+    "hypothesis": "साकेत एक्सप्रेस"
+  },
+  {
+    "id": "marathi_adversarial_002",
+    "reference": "गॉडफ्रे फिलिप्स इंडिया लिमिटेड",
+    "hypothesis": "गॉडफ्रे फिलिप्स इंडिया लिमिटेड"
+  },
+  {
+    "id": "marathi_adversarial_003",
+    "reference": "लोकमान्य टिळक टर्मिनस करीमनगर एक्स्प्रेस",
+    "hypothesis": "लोकमान्य टिळक टर्मिनस करीमनगर एक्सप्रेस"
+  },
+  {
+    "id": "marathi_adversarial_004",
+    "reference": "मानस अघनाशिणी",
+    "hypothesis": "मानस अघनाशिणी"
+  },
+  {
+    "id": "marathi_adversarial_005",
+    "reference": "क्रेडिटॅक्सेस ग्रामीण लिमिटेड",
+    "hypothesis": "क्रेडिट ॲक्सेस ग्रामीण लिमिटेड"
+  }
+]

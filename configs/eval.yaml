@@ -1,0 +1,21 @@
+# configs/eval.yaml — inference + evaluation config (Decision 5 / EVAL.md).
+generation:
+  temperature: 0.6
+  top_p: 0.9
+  top_k: 50
+  repetition_penalty: 1.2       # production (Decision 5). Reference PARITY uses 1.0.
+  max_new_tokens: 2520          # ~30 s
+  seed: 1234
+
+decode:
+  primary: vocos                # Vocos primary metrics
+  stock_ab_fraction: 0.10       # A/B stock-SNAC decode on 10% of samples (Decision 5)
+
+eval:
+  # Marathi ASR for WER (Phase 6, confirmed): Bodhan's own ASR. Gated (accept terms on HF),
+  # custom "indic-canary" architecture → load with trust_remote_code.
+  asr_model: bodhan-ai/indic-transcribe-core
+  asr_language: mr
+  speaker_embedder: speechbrain/spkrec-ecapa-voxceleb   # + ceiling/floor calibration
+  bootstrap_ci: 0.95            # 95% CIs over utterances
+  manifests_dir: configs/eval_manifests

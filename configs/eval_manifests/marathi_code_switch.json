@@ -1,0 +1,8 @@
+{
+  "bucket": "marathi_code_switch",
+  "description": "MR with English loanwords / code-switch spans",
+  "is_retention": false,
+  "needs_reference_audio": true,
+  "count": 0,
+  "items": []
+}

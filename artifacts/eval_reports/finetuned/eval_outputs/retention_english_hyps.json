@@ -1,0 +1,32 @@
+[
+  {
+    "id": "retention_english_000",
+    "reference": "although much later on.",
+    "hypothesis": "Although much later on"
+  },
+  {
+    "id": "retention_english_001",
+    "reference": "the rest of his story charged up within me.",
+    "hypothesis": "THE REST OF HIS STORY CHARGED UP WITHIN ME"
+  },
+  {
+    "id": "retention_english_002",
+    "reference": "an elephant our favourite animal.",
+    "hypothesis": "An elephant our favorite animal"
+  },
+  {
+    "id": "retention_english_003",
+    "reference": "since i cannot speak about the present situation.",
+    "hypothesis": "Since I cannot speak about the present situation"
+  },
+  {
+    "id": "retention_english_004",
+    "reference": "know about his connections with important people.",
+    "hypothesis": "No about his connections with important people"
+  },
+  {
+    "id": "retention_english_005",
+    "reference": "the deep forests to stop cars and demand food.",
+    "hypothesis": "The deep forest to stop cars and demand food"
+  }
+]
